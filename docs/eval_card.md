@@ -33,7 +33,7 @@ Card này đi kèm mỗi báo cáo và được dùng lại ở Day 10. Mọi co
 | `proposal_amount_correct` | 0.9857 | 1.0 ($\Delta$ +0.014, CI [+0.000, +0.043]) | 0.7857 ($\Delta$ −0.200, CI [−0.414, +0.000]) **BLOCK** |
 | `db_fact_kept` | 0.9857 | 1.0 | 0.9286 (warn) |
 | `pass_5` | 0.9286 | 1.0 | 0.7143 (warn) |
-| `cost_per_success` | 49.567 | 48.715 | 781.202 (warn) |
+| `cost_per_success` | 49.567 | 48.7157 | 81.202 (warn) |
 | **Gate** | — | **exit 0 — merge** | **exit 1 — blocked:** `refund_amount_correct`, `pass_rate`, `reply_matches_ledger`, `proposal_amount_correct` |
 
 *Ghi chú:* `refund_amount_correct` của `seeded_regression` có CI chạm 0 nên không bị chặn vì "giảm có ý nghĩa" mà vì dưới sàn 0.95; `pass_rate` bị chặn vì cả hai lý do.
