@@ -27,10 +27,11 @@
 | `db_fact_kept` | năng lực (mức bước) | $\ge 0.95$ | không (cảnh báo) | 0.9857 |
 | `pass_5`, `cost_per_success` | theo dõi | `pass_5` $\ge 0.80$; cost tăng $\le 10\%$ | không | 0.9286; 49.567 |
 | `reply_matches_ledger` (FM-08) | năng lực (mức trajectory) | = 1.0 | có | 1.0 |
+| `proposal_amount_correct` (FM-05) | năng lực | $\ge 0.95$ và không giảm có ý nghĩa | có | 0.9857 |
 
 "Giảm có ý nghĩa" = CI 95% paired bootstrap của $\Delta$ ($\text{PR} - \text{baseline}$) nằm hoàn toàn dưới 0.
 
-**Kiểm chứng gate:** `fixed` (`E-fixed-20261117-d9a3`) → exit 0; `seeded_regression` (`E-seeded_regression-20261117-d9a3`) → exit 1, `pass_rate` $\Delta$ −0.271, CI [−0.500, −0.057].
+**Kiểm chứng gate:** `fixed` (`E-fixed-20261117-d9a3`) → exit 0; `seeded_regression` (`E-seeded_regression-20261117-d9a3`) → exit 1, `pass_rate` $\Delta$ −0.271, CI [−0.500, −0.057]. Grader giải thích được 100% trace fail (`mutation --detect`), báo nhầm 0%.
 
 ## 4. Failure mode → grader
 
@@ -40,7 +41,7 @@
 | **FM-02** | bỏ qua `policy_denied`, vẫn báo đã hoàn | Lab 8 `trial_pass` + `ReplyMatchesLedger` | code | Liên quan tiền và phê duyệt: luôn chấm bằng code so với ledger/status |
 | **FM-03** | tin ticket hơn DB | `DbFactKept` + `RefundAmountCorrect` | code | Event `model_override` ghi rõ trong trace; tiền đọc từ ledger |
 | **FM-04** | cộng/làm tròn sai | `RefundAmountCorrect` | code | Số tiền so trực tiếp ledger với nhãn |
-| **FM-05** | tự trừ trước, host trừ lần nữa | `RefundAmountCorrect` + `ReplyMatchesLedger` | code | Lỗi tiền; reply và ledger lệch nhau |
+| **FM-05** | tự trừ trước, host trừ lần nữa | `ProposalAmountCorrect` + `RefundAmountCorrect` + `ReplyMatchesLedger` | code | Lỗi tiền; có ca ledger và reply đều trông đúng (`C-013`), chỉ đề xuất gửi host sai |
 | **FM-06** | dùng clause cũ | `RefundAmountCorrect` + `trial_pass` | code | Hệ quả là ledger/status sai so với nhãn |
 | **FM-07** | hoàn nhầm claim cùng đơn | `ApprovalBypass` | code | Dòng ledger ngoài claim là vi phạm phê duyệt, phải bằng 0 |
 | **FM-08** | reply nói số tiền khác ledger | `ReplyMatchesLedger` | code | Judge `helpful` đã được chứng minh không bắt được ($R = 0.3$) vì không có ledger |

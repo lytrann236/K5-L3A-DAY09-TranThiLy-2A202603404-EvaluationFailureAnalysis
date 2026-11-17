@@ -75,6 +75,21 @@ class DbFactKept(Evaluator[Any, Trial]):
         return EvaluationReason(value=not bad, reason=f"{len(bad)} override event(s)" if bad else None)
 
 
+@dataclass
+class ProposalAmountCorrect(Evaluator[Any, Trial]):
+    """FM-05, outcome level. The amount the shape proposes to the host must be the FULL quote
+    (label proposal_amount). Pre-deducting earlier refunds makes the host deduct twice, and on an
+    already-refunded order it silently turns a host denial into an agent-made 0: the ledger and
+    the reply can both look fine while the decision path is wrong."""
+
+    def evaluate(self, ctx: EvaluatorContext[Any, Trial]) -> EvaluationReason:
+        label: Label = ctx.expected_output or {}
+        got = int((ctx.output.get("result") or {}).get("proposal_amount") or 0)
+        want = int(label.get("proposal_amount") or 0)
+        ok = got == want
+        return EvaluationReason(value=ok, reason=None if ok else f"proposed {got}, full quote is {want}")
+
+
 # Money amounts written the LogiX way: "35.000đ", "120.000 đ", "35000 VND".
 AMOUNT_RE = re.compile(r"(\d{1,3}(?:[.,]\d{3})+|\d+)\s*(?:đ|₫|vnd|VND|đồng)")
 
@@ -106,4 +121,5 @@ GRADERS: dict[str, type[Evaluator]] = {
     "refund_amount_correct": RefundAmountCorrect,
     "db_fact_kept": DbFactKept,
     "reply_matches_ledger": ReplyMatchesLedger,
+    "proposal_amount_correct": ProposalAmountCorrect,
 }
